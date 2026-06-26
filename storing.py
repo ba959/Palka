@@ -2,16 +2,16 @@ from flask import Flask, render_template_string, request
 
 app = Flask(__name__)
 
-# База данных курсов
+# База данных курсов по программированию
 COURSES_DATA = {
     "python": {
         "title": "🐍 Курс по Python",
         "description": "Изучи самый популярный язык для нейросетей, сайтов и автоматизации.",
         "video_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
         "lessons": [
-            {"id": 1, "title": "1. Введение в Python и синтаксис", "content": "Python славится своим простым синтаксисом. Здесь не нужны точки с запятой, а блоки кода выделяются отступами. Твой первый код: print('Привет, мир!')"},
-            {"id": 2, "title": "2. Переменные и типы данных", "content": "Переменные хранят данные. В Python не нужно объявлять тип заранее: x = 10 (это целое число), name = 'Иван' (это строка)."},
-            {"id": 3, "title": "3. Условия и логика (if/elif/else)", "content": "Позволяют программе принимать решения. Пример: if age >= 18: print('Доступ разрешен')."}
+            {"id": 1, "title": "1. Введение в Python и синтаксис", "content": "Python славится своим простым синтаксисом. Твой первый код: print('Привет, мир!')"},
+            {"id": 2, "title": "2. Переменные и типы данных", "content": "Переменные хранят данные. В Python не нужно объявлять тип заранее: x = 10."},
+            {"id": 3, "title": "3. Условия и логика (if/elif/else)", "content": "Пример: if age >= 18: print('Доступ разрешен')."}
         ],
         "quiz": {
             "question": "Как правильно создать переменную со значением 5 в Python?",
@@ -25,15 +25,15 @@ COURSES_DATA = {
         "description": "Оживи свои веб-страницы. Язык для создания интерактивных сайтов и фронтенда.",
         "video_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
         "lessons": [
-            {"id": 1, "title": "1. Что такое JavaScript и где он работает?", "content": "JavaScript (JS) выполняется прямо в браузере. Он позволяет делать интерактивные кнопки, анимации и обрабатывать клики пользователей."},
-            {"id": 2, "title": "2. Переменные (let, const, var)", "content": "В современном JS для создания переменных используются let (для изменяемых значений) и const (для констант). Например: let score = 0;."},
-            {"id": 3, "title": "3. Работа с функциями", "content": "Функции в JS объявляются через слово function: function sayHi() { alert('Привет!'); }."}
+            {"id": 1, "title": "1. Что такое JavaScript?", "content": "JavaScript (JS) выполняется прямо в браузере и делает страницы интерактивными."},
+            {"id": 2, "title": "2. Переменные (let, const)", "content": "Используются let для изменяемых значений и const для констант."},
+            {"id": 3, "title": "3. Работа с функциями", "content": "Функции объявляются через слово function: function sayHi() { ... }"}
         ],
         "quiz": {
             "question": "Какое ключевое слово создает переменную, которую НЕЛЬЗЯ изменить?",
             "options": ["let", "var", "const"],
             "correct": "const",
-            "explain": "Ключевое слово const означает 'константа' — значение этой переменной перезаписать нельзя."
+            "explain": "Ключевое слово const означает 'константа'."
         }
     },
     "cpp": {
@@ -41,18 +41,37 @@ COURSES_DATA = {
         "description": "Мощный язык для создания крутых 3D-игр, операционных систем и быстрых программ.",
         "video_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
         "lessons": [
-            {"id": 1, "title": "1. Основы C++ и компиляция", "content": "C++ — это компилируемый язык. Программа жестко проверяется перед запуском. Базовый каркас требует подключения библиотеки: #include <iostream>."},
-            {"id": 2, "title": "2. Строгая типизация", "content": "Здесь ты обязан говорить компьютеру, что именно лежит в переменной: int number = 100; или float pi = 3.14;."},
-            {"id": 3, "title": "3. Точки с запятой и функция main", "content": "Весь код в C++ пишется внутри главной функции int main() { ... }, а в конце каждой строчки обязательно ставится ;."}
+            {"id": 1, "title": "1. Основы C++ и компиляция", "content": "C++ — это компилируемый язык. Базовый каркас требует: #include <iostream>."},
+            {"id": 2, "title": "2. Строгая типизация", "content": "Здесь ты обязан говорить компьютеру тип данных: int number = 100;."},
+            {"id": 3, "title": "3. Точки с запятой", "content": "В конце каждой строчки обязательно ставится ;."}
         ],
         "quiz": {
             "question": "Что обязательно нужно ставить в конце почти каждой строки кода в C++?",
             "options": ["Точку с запятой (;)", "Двоеточие (:)", "Ничего не нужно"],
             "correct": "Точку с запятой (;)",
-            "explain": "Без точки с запятой компилятор C++ выдаст ошибку и программа не запустится."
+            "explain": "Без точки с запятой компилятор C++ выдаст ошибку."
         }
     }
 }
+
+# Вопросы в стиле Duolingo для английского
+ENGLISH_QUIZ = [
+    {
+        "question": "Что означает глагол 'to Build' в контексте разработки программ?",
+        "options": ["Построить дом", "Скомпилировать (собрать) код", "Найти ошибку в приложении"],
+        "correct": "Скомпилировать (собрать) код"
+    },
+    {
+        "question": "Как переводится слово 'Bug' (баг) на самом деле?",
+        "options": ["Фича", "Жук / Ошибка в коде", "Новая кнопка"],
+        "correct": "Жук / Ошибка в коде"
+    },
+    {
+        "question": "Что программисты делают, когда говорят 'Deploy' (задеплоить) сайт?",
+        "options": ["Удаляют его", "Пишут к нему инструкции", "Выкладывают на сервер для всех"],
+        "correct": "Выкладывают на сервер для всех"
+    }
+]
 
 MOBILE_STYLES = """
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -62,7 +81,6 @@ MOBILE_STYLES = """
     p { font-size: 18px; color: #b0b0b0; }
     .container { max-width: 600px; margin: 0 auto; }
     .course-card { background: #1e1e1e; border: 2px solid #333; border-radius: 16px; padding: 20px; margin-bottom: 20px; border-left: 6px solid #00ffcc; }
-    .english-card { border-left-color: #ff3366; }
     .course-title { font-size: 24px; color: #fff; margin: 0 0 10px 0; font-weight: bold; }
     .btn { display: block; background-color: #252525; color: #00ffcc; padding: 20px; text-decoration: none; border-radius: 16px; font-weight: bold; font-size: 22px; text-align: center; border: 1px solid #333; margin-top: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
     .english-btn { color: #ff3366; border-color: #442233; }
@@ -195,52 +213,75 @@ def view_course(lang_name):
     """
     return render_template_string(html_content)
 
-# 4. СТРАНИЦА АНГЛИЙСКОГО
+# 4. СТРАНИЦА АНГЛИЙСКОГО (DUOLINGO STYLE)
 @app.route('/english', methods=['GET', 'POST'])
 def view_english():
+    step = request.args.get('step', default=0, type=int)
+    
+    if step >= len(ENGLISH_QUIZ):
+        return render_template_string(f"""
+        <html>
+        <head>{MOBILE_STYLES}</head>
+        <body>
+            <div class="container" style="text-align:center; margin-top:50px;">
+                <h1 style="color:#00ff66;">🎉 Курс пройден!</h1>
+                <p style="font-size:22px;">Ты укрепил свои позиции и стал на шаг ближе к зарубежному IT.</p>
+                <a href="/" class="btn" style="background:#ff3366; color:white;">На главную</a>
+            </div>
+        </body>
+        </html>
+        """)
+
+    current_q = ENGLISH_QUIZ[step]
     result_message = ""
+    next_button = ""
+    show_form = True
+
     if request.method == 'POST':
         user_answer = request.form.get('answer')
-        if user_answer == "Скомпилировать (собрать) код":
-            result_message = "<p style='color:#00ff66; font-weight:bold; font-size:20px; text-align:center; margin-top:15px;'>✅ Правильно!</p>"
+        if user_answer == current_q['correct']:
+            result_message = "<p style='color:#00ff66; font-weight:bold; font-size:22px; text-align:center;'>✅ Великолепно! Идем дальше.</p>"
+            next_button = f'<a href="/english?step={step + 1}" class="btn" style="background:#00ff66; color:#121212;">Продолжить ➡</a>'
+            show_form = False
         elif user_answer:
-            result_message = "<p style='color:#ff3366; font-weight:bold; font-size:20px; text-align:center; margin-top:15px;'>❌ Неверно. Попробуй еще раз!</p>"
+            result_message = "<p style='color:#ff3366; font-weight:bold; font-size:20px; text-align:center;'>❌ Неверно. Попробуй еще раз и выбери другой вариант!</p>"
+
+    options_html = ""
+    for opt in current_q['options']:
+        options_html += f"""
+        <label class="option">
+            <input type="radio" name="answer" value="{opt}"> <span>{opt}</span>
+        </label>
+        """
+
+    form_html = f"""
+    <form method="POST">
+        {options_html}
+        <button type="submit" class="submit-btn english-submit">Проверить ответ</button>
+    </form>
+    """ if show_form else ""
+
+    progress_percent = (step / len(ENGLISH_QUIZ)) * 100
 
     html_content = f"""
     <html>
     <head>{MOBILE_STYLES}</head>
     <body>
         <div class="container">
-            <h1 style="color: #ff3366;">🇬🇧 Английский для IT</h1>
-            <p style="text-align:center;">Словарь важных терминов, которые должен знать каждый разработчик.</p>
+            <h1 style="color: #ff3366;">🇬🇧 IT-Duolingo (Вопрос {step + 1} из {len(ENGLISH_QUIZ)})</h1>
             
-            <h2 style="color:#fff; margin-top:25px;">📚 Важные IT-слова:</h2>
-            <div style="background:#1e1e1e; padding:20px; border-radius:12px; margin-bottom:15px; border:1px solid #333;">
-                <p style="margin:0;"><strong style="color:#ff3366;">Source Code</strong> — Исходный код программы.</p>
-                <p style="margin:10px 0 0 0;"><strong style="color:#ff3366;">Bug</strong> — Ошибка или сбой в коде программы.</p>
-                <p style="margin:10px 0 0 0;"><strong style="color:#ff3366;">Feature</strong> — Новая фича, функция или возможность.</p>
-                <p style="margin:10px 0 0 0;"><strong style="color:#ff3366;">Deploy</strong> — Развертывание (загрузка) сайта на сервер.</p>
+            <div style="width:100%; background:#333; height:12px; border-radius:6px; margin-bottom:30px; overflow:hidden;">
+                <div style="width:{progress_percent}%; background:#ff3366; height:100%; transition: 0.3s;"></div>
             </div>
-            
-            <h2 style="color:#fff; margin-top:25px;">🧠 Лингво-тест:</h2>
+
             <div style="background:#1e1e1e; padding:20px; border-radius:12px; border:1px solid #333;">
-                <h3 style="margin-top:0; font-size:20px; color:#fff;">Что означает глагол "to Build" в контексте разработки программ?</h3>
-                <form method="POST">
-                    <label class="option">
-                        <input type="radio" name="answer" value="Построить дом"> <span>Построить дом</span>
-                    </label>
-                    <label class="option">
-                        <input type="radio" name="answer" value="Скомпилировать (собрать) код"> <span>Скомпилировать (собрать) код</span>
-                    </label>
-                    <label class="option">
-                        <input type="radio" name="answer" value="Найти ошибку в приложении"> <span>Найти ошибку в приложении</span>
-                    </label>
-                    <button type="submit" class="submit-btn english-submit">Проверить ответ</button>
-                </form>
+                <h3 style="margin-top:0; font-size:22px; color:#fff;">{current_q['question']}</h3>
+                {form_html}
                 {result_message}
+                {next_button}
             </div>
             
-            <a href="/" class="back-btn">⬅ На главную</a>
+            <a href="/" class="back-btn">⬅ Выйти в меню</a>
         </div>
     </body>
     </html>
